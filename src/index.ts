@@ -5,6 +5,8 @@ import morgan from 'morgan';
 import dotenv from 'dotenv';
 import swaggerUi from 'swagger-ui-express';
 import swaggerJsdoc from 'swagger-jsdoc';
+import bookRoutes from './routes/book.routes';
+import exampleRoutes from './routes/example.routes';
 
 // Load environment variables
 dotenv.config();
@@ -77,8 +79,9 @@ app.get('/health', (req: Request, res: Response) => {
   });
 });
 
-// API routes will be added here
-// app.use('/api', routes);
+// API routes
+app.use('/api/books', bookRoutes);
+app.use('/api/example', exampleRoutes);
 
 // Error handling middleware
 app.use((err: Error, req: Request, res: Response) => {
