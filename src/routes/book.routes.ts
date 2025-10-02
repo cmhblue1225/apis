@@ -54,7 +54,9 @@ const router = Router();
  *           description: 책 설명
  *         coverImage:
  *           type: string
- *           description: 표지 이미지 URL
+ *           description: 표지 이미지 URL (알라딘 제공, 다양한 크기 지원)
+ *           example: "https://image.aladin.co.kr/product/3408/36/coversum/8966260950_2.jpg"
+ *           format: uri
  *         categoryName:
  *           type: string
  *           description: 카테고리
