@@ -1,0 +1,551 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "iOS Backend API",
+    "version": "1.0.0",
+    "description": "iOS 앱을 위한 백엔드 API 문서 - 독서 관리 앱용 책 검색 API",
+    "contact": {
+      "name": "API Support",
+      "email": "support@example.com"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://lucky-lollipop-31b7e2.netlify.app",
+      "description": "Production server"
+    },
+    {
+      "url": "http://localhost:3000",
+      "description": "Development server"
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "schemas": {
+      "Book": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "알라딘 상품 ID",
+            "example": "123456789"
+          },
+          "isbn": {
+            "type": "string",
+            "description": "ISBN-10",
+            "example": "8966260950"
+          },
+          "isbn13": {
+            "type": "string",
+            "description": "ISBN-13",
+            "example": "9788966260959"
+          },
+          "title": {
+            "type": "string",
+            "description": "책 제목",
+            "example": "클린 코드"
+          },
+          "subtitle": {
+            "type": "string",
+            "description": "부제",
+            "example": "애자일 소프트웨어 장인 정신"
+          },
+          "author": {
+            "type": "string",
+            "description": "저자",
+            "example": "로버트 C. 마틴"
+          },
+          "publisher": {
+            "type": "string",
+            "description": "출판사",
+            "example": "인사이트"
+          },
+          "publishedDate": {
+            "type": "string",
+            "description": "출판일",
+            "example": "2013-12-24"
+          },
+          "description": {
+            "type": "string",
+            "description": "책 설명"
+          },
+          "coverImage": {
+            "type": "string",
+            "description": "표지 이미지 URL"
+          },
+          "categoryName": {
+            "type": "string",
+            "description": "카테고리",
+            "example": "국내도서>컴퓨터/IT"
+          },
+          "pageCount": {
+            "type": "number",
+            "description": "페이지 수",
+            "example": 584
+          },
+          "price": {
+            "type": "object",
+            "properties": {
+              "standard": {
+                "type": "number",
+                "description": "정가"
+              },
+              "sales": {
+                "type": "number",
+                "description": "판매가"
+              },
+              "currency": {
+                "type": "string",
+                "example": "KRW"
+              }
+            }
+          },
+          "link": {
+            "type": "string",
+            "description": "알라딘 상품 링크"
+          },
+          "stockStatus": {
+            "type": "string",
+            "description": "재고 상태"
+          },
+          "rating": {
+            "type": "number",
+            "description": "고객 평점 (5점 만점)"
+          },
+          "addedAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "등록 시간 (ISO 8601)"
+          }
+        }
+      }
+    }
+  },
+  "paths": {
+    "/api/books/search": {
+      "get": {
+        "summary": "책 검색 (제목, 저자 등)",
+        "description": "사용자가 입력한 검색어로 책을 검색합니다",
+        "tags": [
+          "Books"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "검색어 (제목, 저자 등)",
+            "example": "클린코드"
+          },
+          {
+            "in": "query",
+            "name": "queryType",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "Title",
+                "Author",
+                "Publisher",
+                "Keyword"
+              ],
+              "default": "Title"
+            },
+            "description": "검색 타입"
+          },
+          {
+            "in": "query",
+            "name": "maxResults",
+            "schema": {
+              "type": "number",
+              "default": 10,
+              "minimum": 1,
+              "maximum": 50
+            },
+            "description": "최대 결과 수"
+          },
+          {
+            "in": "query",
+            "name": "start",
+            "schema": {
+              "type": "number",
+              "default": 1
+            },
+            "description": "시작 인덱스 (페이지네이션)"
+          },
+          {
+            "in": "query",
+            "name": "sort",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "Accuracy",
+                "PublishTime",
+                "Title",
+                "SalesPoint"
+              ],
+              "default": "Accuracy"
+            },
+            "description": "정렬 기준"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "검색 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "5개의 책을 찾았습니다"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "books": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/Book"
+                          }
+                        },
+                        "totalResults": {
+                          "type": "number"
+                        },
+                        "currentPage": {
+                          "type": "number"
+                        },
+                        "itemsPerPage": {
+                          "type": "number"
+                        },
+                        "query": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "잘못된 요청"
+          },
+          "404": {
+            "description": "검색 결과 없음"
+          },
+          "500": {
+            "description": "서버 오류"
+          }
+        }
+      }
+    },
+    "/api/books/isbn/{isbn}": {
+      "get": {
+        "summary": "ISBN으로 책 검색 (독서 중인 책 등록용)",
+        "description": "ISBN으로 정확한 책 정보를 조회합니다.\n\n**사용 시나리오:**\n1. 사용자가 바코드 스캔 또는 ISBN 입력\n2. 이 API로 정확한 책 정보 조회\n3. iOS 앱에서 반환된 정보로 \"독서 중인 책\" 자동 등록\n",
+        "tags": [
+          "Books"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "isbn",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "ISBN-10 또는 ISBN-13 (하이픈 포함 가능)",
+            "example": "9788966260959"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "조회 성공 - 독서 중인 책으로 등록 가능",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "책 정보를 성공적으로 조회했습니다"
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/Book"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "ISBN이 입력되지 않음"
+          },
+          "404": {
+            "description": "해당 ISBN의 책을 찾을 수 없음"
+          },
+          "500": {
+            "description": "서버 오류"
+          }
+        }
+      }
+    },
+    "/api/books/{bookId}": {
+      "get": {
+        "summary": "책 상세 정보 조회",
+        "description": "알라딘 상품 ID로 책의 상세 정보를 조회합니다",
+        "tags": [
+          "Books"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "bookId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "알라딘 상품 ID",
+            "example": "123456789"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "조회 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/Book"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "책 ID가 입력되지 않음"
+          },
+          "404": {
+            "description": "책을 찾을 수 없음"
+          },
+          "500": {
+            "description": "서버 오류"
+          }
+        }
+      }
+    },
+    "/api/books": {
+      "get": {
+        "summary": "통합 검색 (제목 또는 ISBN 자동 판별)",
+        "description": "사용자 입력이 ISBN인지 제목인지 자동으로 판별하여 검색합니다.\n\n**검색 로직:**\n- 숫자만 10자리 또는 13자리 → ISBN 검색\n- 그 외 → 제목 검색\n\n**독서 관리 앱의 메인 검색 기능으로 사용 권장**\n",
+        "tags": [
+          "Books"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "search",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "검색어 (제목 또는 ISBN)",
+            "example": "클린코드"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "검색 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "searchType": {
+                      "type": "string",
+                      "enum": [
+                        "isbn",
+                        "title"
+                      ],
+                      "description": "사용된 검색 타입"
+                    },
+                    "data": {
+                      "oneOf": [
+                        {
+                          "$ref": "#/components/schemas/Book"
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "books": {
+                              "type": "array",
+                              "items": {
+                                "$ref": "#/components/schemas/Book"
+                              }
+                            },
+                            "totalResults": {
+                              "type": "number"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "검색어가 입력되지 않음"
+          },
+          "404": {
+            "description": "검색 결과 없음"
+          },
+          "500": {
+            "description": "서버 오류"
+          }
+        }
+      }
+    },
+    "/api/example": {
+      "get": {
+        "summary": "예제 API 엔드포인트",
+        "description": "예제 데이터를 반환합니다",
+        "tags": [
+          "Example"
+        ],
+        "responses": {
+          "200": {
+            "description": "성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Example API"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "새로운 예제 데이터 생성",
+        "description": "새로운 예제 데이터를 생성합니다",
+        "tags": [
+          "Example"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "name"
+                ],
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "example": "Example Name"
+                  },
+                  "description": {
+                    "type": "string",
+                    "example": "Example Description"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "생성됨"
+          },
+          "400": {
+            "description": "잘못된 요청"
+          }
+        }
+      }
+    },
+    "/api/example/{id}": {
+      "get": {
+        "summary": "ID로 예제 데이터 조회",
+        "description": "특정 ID의 예제 데이터를 반환합니다",
+        "tags": [
+          "Example"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "조회할 데이터의 ID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "성공"
+          },
+          "404": {
+            "description": "데이터를 찾을 수 없음"
+          }
+        }
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "Books",
+      "description": "책 검색 및 조회 API (독서 관리 앱용)"
+    }
+  ]
+}

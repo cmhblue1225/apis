@@ -23,10 +23,6 @@
   to = "/.netlify/functions/api/health"
   status = 200
 
-[[redirects]]
-  from = "/swagger.json"
-  to = "/.netlify/functions/api/swagger.json"
-  status = 200
 
 [[headers]]
   for = "/*"
