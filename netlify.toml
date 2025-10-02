@@ -1,7 +1,7 @@
 [build]
   command = "npm run build"
   functions = "netlify/functions"
-  publish = "dist"
+  publish = "public"
 
 [build.environment]
   NODE_VERSION = "20"
@@ -14,8 +14,18 @@
   autoLaunch = false
 
 [[redirects]]
-  from = "/*"
-  to = "/.netlify/functions/api/:splat"
+  from = "/api/*"
+  to = "/.netlify/functions/api/api/:splat"
+  status = 200
+
+[[redirects]]
+  from = "/health"
+  to = "/.netlify/functions/api/health"
+  status = 200
+
+[[redirects]]
+  from = "/swagger.json"
+  to = "/.netlify/functions/api/swagger.json"
   status = 200
 
 [[headers]]

@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>iOS Backend API</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 60px 40px;
+            max-width: 600px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            text-align: center;
+        }
+
+        h1 {
+            color: #333;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .version {
+            color: #666;
+            font-size: 1rem;
+            margin-bottom: 30px;
+        }
+
+        .description {
+            color: #555;
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 40px;
+        }
+
+        .links {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        a {
+            display: block;
+            padding: 15px 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 10px;
+            font-weight: 600;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        a:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .endpoints {
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 2px solid #f0f0f0;
+        }
+
+        .endpoints h2 {
+            color: #333;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+        }
+
+        .endpoint {
+            background: #f8f9fa;
+            padding: 12px 20px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            text-align: left;
+            font-family: 'Monaco', 'Courier New', monospace;
+            font-size: 0.9rem;
+            color: #555;
+        }
+
+        .method {
+            display: inline-block;
+            padding: 2px 8px;
+            background: #28a745;
+            color: white;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📚 iOS Backend API</h1>
+        <div class="version">Version 1.0.0</div>
+        <p class="description">
+            독서 관리 앱을 위한 백엔드 API 서버입니다.<br>
+            알라딘 Open API를 활용하여 책 정보를 제공합니다.
+        </p>
+
+        <div class="links">
+            <a href="/api-docs.html">📖 API 문서 보기 (Swagger UI)</a>
+            <a href="/health">🏥 Health Check</a>
+        </div>
+
+        <div class="endpoints">
+            <h2>주요 엔드포인트</h2>
+            <div class="endpoint">
+                <span class="method">GET</span>
+                /api/books?search={검색어}
+            </div>
+            <div class="endpoint">
+                <span class="method">GET</span>
+                /api/books/isbn/{isbn}
+            </div>
+            <div class="endpoint">
+                <span class="method">GET</span>
+                /api/books/search?query={제목}
+            </div>
+        </div>
+    </div>
+</body>
+</html>
